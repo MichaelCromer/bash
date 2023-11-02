@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# Use dmenu to create a new note
+
+main() {
+  local note_text="$(dmenu < /dev/null)"
+  if [[ !("$note_text" == "") ]]; then
+    note "$note_text"
+  fi
+  exit 0
+}
+
+main

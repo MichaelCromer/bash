@@ -1,0 +1,64 @@
+#!/bin/bash
+#
+# This script is used to create a new note in the notes file
+
+# Set the notes directory
+
+NOTES_FILE="$HOME/.notes"
+
+# first get the optional parameters (both -f and --flag style supported)
+# the note begins after the -- separator
+while [ $# -gt 0 ]; do
+  case "$1" in
+    -f|--file)
+      shift
+      NOTES_FILE="$1"
+      shift
+      ;;
+    --)
+      shift
+      break
+      ;;
+    *)
+      break
+      ;;
+  esac
+done
+
+# Get the note
+note="$*"
+# nb: the $* syntax means "all of the command line arguments, separated by spaces", so the user can just type the note
+# without quotes and it will still work
+
+# Check if the note is empty
+if [ -z "$note" ]; then
+  # can do some other funky stuff with this later
+  exit 1
+fi
+# Parse the note to remove tabs and newlines (we will use tabs to separate the date, time, branch, and note)
+note=$(echo "$note" | tr -d '\t' | tr -d '\n')
+
+# Get the current date in YYYYMMDD format, and the current time in hhmmss format
+date=$(date +%Y%m%d)
+time=$(date +%H%M%S)
+
+# Get the current working directory
+cwd=$(pwd)
+
+# Get the current user
+user=$(whoami)
+
+# Check if the current directory is in a git repository
+if [ $(git rev-parse --is-inside-work-tree) ]; then
+  # Get the base name of the top level directory of the git repository
+  dir=$(basename "$(git rev-parse --show-toplevel)")
+  # Get the current branch
+  branch=$(git rev-parse --abbrev-ref HEAD)
+else
+  # If not in a git repo, use the base of the current directory and a branch of NULL
+  dir=$(basename "$HOME")
+  branch="NULL"
+fi
+
+# Append the note to the file
+echo -e "$user\t$date\t$time\t$dir\t$branch\t$note" >> "$NOTES_FILE"

@@ -1,0 +1,11 @@
+#!/bin/bash
+
+main() {
+  local query="$(dmenu < /dev/null)"
+  if [[ !("$query" == "") ]]; then
+    qutebrowser --target window "$query"
+  fi
+  exit 0
+}
+
+main
