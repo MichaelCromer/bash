@@ -1,0 +1,36 @@
+#!/bin/bash
+
+TODO_FILE="$HOME/.todo"
+if [[ ! -f $TODO_FILE ]]; then
+    touch $TODO_FILE
+fi
+
+function todo_list() {
+    cat -n $TODO_FILE
+}
+
+function todo_edit() {
+    ${EDITOR:-vi} $TODO_FILE
+}
+
+function todo_write() {
+    echo "$@" >> $TODO_FILE
+}
+
+function todo_main() {
+    if [[ $# -eq 0 ]]; then
+        todo_list
+        exit 0
+    fi
+
+    if [[ "$1" == "-E" || "$1" == "--edit" ]]; then
+        todo_edit
+        exit 0
+    fi
+
+    todo_write "$@"
+
+    exit 0
+}
+
+todo_main "$@"
