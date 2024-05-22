@@ -1,0 +1,141 @@
+#!/bin/bash
+
+BLACK="\033[0;30m"
+RED="\033[0;31m"
+GREEN="\033[0;32m"
+YELLOW="\033[0;33m"
+BLUE="\033[0;34m"
+MAGENTA="\033[0;35m"
+CYAN="\033[0;36m"
+WHITE="\033[0;37m"
+RESET="\033[0m"
+
+BOLD_BLACK="\033[1;30m"
+BOLD_RED="\033[1;31m"
+BOLD_GREEN="\033[1;32m"
+BOLD_YELLOW="\033[1;33m"
+BOLD_BLUE="\033[1;34m"
+BOLD_MAGENTA="\033[1;35m"
+BOLD_CYAN="\033[1;36m"
+BOLD_WHITE="\033[1;37m"
+
+function git_branch() {
+    # ## string showing branch and head state
+
+    local branch=$(git rev-parse --abbrev-ref HEAD 2> /dev/null)
+    local is_merging=$([[ -f .git/MERGE_HEAD ]] && echo 1)
+    local is_rebasing=$([[ -f .git/rebase-apply/next ]] && echo 1)
+    local is_cherry_picking=$([[ -f .git/CHERRY_PICK_HEAD ]] && echo 1)
+    local is_bisecting=$([[ -f .git/BISECT_LOG ]] && echo 1)
+    local is_detached=$(git symbolic-ref -q HEAD 2> /dev/null)
+
+    local output=""
+    [[ -n "$branch" ]] && output+="$branch"
+    [[ "$is_merging" ]] && output+="|MERGE"
+    [[ "$is_rebasing" ]] && output+="|REBASE"
+    [[ "$is_cherry_picking" ]] && output+="|CHERRY-PICK"
+    [[ "$is_bisecting" ]] && output+="|BISECT"
+    [[ -z "$is_detached" ]] && output="DETACHED|$output"
+
+    echo "$output"
+}
+
+function git_state() {
+    # ## string showing various kinds of working tree state
+    #
+    # - `!` conflicted state
+    # - `?` untracked files
+    # - `*` unstaged changes
+    # - `+` staged changes
+    #
+    # - `∆[n]` ahead of remote (by n commits)
+    # - `∇[n]` behind remote (by n commits)
+    # - `$[n]` stashed changes (n stashes)
+    #
+    local status=$(git status --porcelain 2> /dev/null)
+    local stashes=$(git stash list 2> /dev/null | wc -l)
+    local ahead=$(git rev-list --count @{u}..HEAD 2> /dev/null)
+    local behind=$(git rev-list --count HEAD..@{u} 2> /dev/null)
+    local output=""
+
+    [[ "$status" =~ ^UU ]] && output+="!"
+    [[ "$status" =~ ^"\?\?" ]] && output+="?"
+    [[ "$status" =~ ^.[MTARC] ]] && output+="*"
+    [[ "$status" =~ ^[MTARC] ]] && output+="+"
+    
+    [[ "$stashes" == 1 ]] && output+="\$"
+    [[ "$stashes" -gt 1 ]] && output+=" \$$stashes"
+
+    [[ "$ahead" == 1 ]] && output+="∆"
+    [[ "$ahead" -gt 1 ]] && output+=" ∆$ahead"
+
+    [[ "$behind" == 1 ]] && output+="∇"
+    [[ "$behind" -gt 1 ]] && output+=" ∇$behind"
+
+    echo "$output"
+}
+
+function git_colour() {
+    # ## calculates a colour based on the output of git_state
+    #
+    # - clean : white
+    # - staged : green
+    # - unstaged : yellow
+    # - mixed : 'orange' (bold yellow)
+    # - conflicted or diverged : red
+    #
+    # - unstable (stash, ahead, behind) : cyan 
+    
+    local state=$(git_state)
+
+    local is_staged=$([[ "$state" =~ \+ ]] && echo 1)
+    local is_unstaged=$([[ "$state" =~ \* ]] && echo 1)
+    local is_untracked=$([[ "$state" =~ \? ]] && echo 1)
+    local is_conflicted=$([[ "$state" =~ ! ]] && echo 1)
+
+    local is_stash=$([[ "$state" =~ \$ ]] && echo 1)
+    local is_ahead=$([[ "$state" =~ ∆ ]] && echo 1)
+    local is_behind=$([[ "$state" =~ ∇ ]] && echo 1)
+
+    if [[ -n "$is_conflicted" ]]; then
+        echo -e $BOLD_RED
+    elif [[ -n "$is_staged" && -n "$is_unstaged" ]]; then
+        echo -e $BOLD_YELLOW
+    elif [[ -n "$is_staged" ]]; then
+        echo -e $BOLD_GREEN
+    elif [[ -n "$is_unstaged" ]]; then
+        echo -e $YELLOW
+    elif [[ -n "$is_untracked" ]]; then
+        echo -e $MAGENTA
+    elif [[ -n "$is_stash" || -n "$is_ahead" || -n "$is_behind" ]]; then
+        echo -e $BOLD_CYAN
+    else
+        echo -e $WHITE
+    fi
+}
+
+function git_prompt() {
+    # ## string showing git branch and state
+    #
+    # - "[repo]/(branch)state"
+    
+    local repo=$(git rev-parse --show-toplevel 2> /dev/null)
+    [[ -z "$repo" ]] && return
+
+    local branch=$(git_branch)
+    local state=$(git_state)
+    local colour=$(git_colour)
+
+    echo -e "\x01$BOLD_WHITE\x02 | [$(basename $repo)]/\x01$colour\x02($branch)$state\x01$RESET\x02"
+}
+
+PS1="\[$BOLD_WHITE\]==> "
+PS1+="\[$BOLD_MAGENTA\]\T"
+PS1+="\[$BOLD_WHITE\] | "
+PS1+="\[$BOLD_GREEN\]\u"
+PS1+='$(git_prompt)'
+PS1+="\[$BOLD_WHITE\] | "
+PS1+="\[$BOLD_BLUE\]\W"
+PS1+="\[$BOLD_WHITE\] | \$ \[$RESET\]"
+
+export PS1
