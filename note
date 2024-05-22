@@ -200,7 +200,13 @@ note_main () {
         else
             note_write_line "$@"
         fi
+        exit 0
     fi
+
+    while [[ $# -gt 0 ]]; do
+        local option="$1"
+        shift 1
+    done
 }
 
 note_main "$@"
