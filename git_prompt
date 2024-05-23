@@ -92,12 +92,13 @@ function git_colour() {
     local is_unstaged=$([[ "$state" =~ \* ]] && echo 1)
     local is_untracked=$([[ "$state" =~ \? ]] && echo 1)
     local is_conflicted=$([[ "$state" =~ ! ]] && echo 1)
+    local is_diverged=$([[ "$state" =~ ∆ ]] && [[ "$state" =~ ∇ ]] && echo 1)
 
     local is_stash=$([[ "$state" =~ \$ ]] && echo 1)
     local is_ahead=$([[ "$state" =~ ∆ ]] && echo 1)
     local is_behind=$([[ "$state" =~ ∇ ]] && echo 1)
 
-    if [[ -n "$is_conflicted" ]]; then
+    if [[ -n "$is_conflicted" || -n "$is_diverged" ]]; then
         echo -e $BOLD_RED
     elif [[ -n "$is_staged" && -n "$is_unstaged" ]]; then
         echo -e $BOLD_YELLOW
