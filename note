@@ -25,33 +25,30 @@ note_show_help () {
 
   Options:
 
-    GENERAL MATCHING:
-      -a,  --after           DATE     Include notes on or after DATE 
-      -b,  --before          DATE     Include notes strictly before DATE 
-      -d,  --date           [DATE]    Include notes exactly on DATE 
-      -xd, --not-date       [DATE]    Exclude notes exactly on DATE 
-      -m,  --match           STRING   Include notes matching STRING
-      -xm, --not-match       STRING   Exclude notes matching STRING
-      -r,  --git-repo       [REPO]    Include notes from git repository REPO
-      -xr  --not-git-repo   [REPO]    Exclude notes from git repository REPO
-      -B,  --git-branch     [BRANCH]  Include notes from git branch BRANCH
-      -xB  --not-git-branch [BRANCH]  Exclude notes from git branch BRANCH
+    GENERAL FILTERING:
+      -a,  --after        DATE    Include notes strictly after DATE 
+      -b,  --before       DATE    Include notes strictly before DATE 
+      -d,  --date         DATE    Include notes exactly on DATE 
+      -m,  --match        STRING  Include notes matching STRING
+      -R,  --git-repo     NAME    Include notes from git repository NAME
+      -B,  --git-branch   NAME    Include notes from git branch NAME
 
-    SPECIAL MATCHING:
-      -l,  --last [N]        Display the last matching note only.
-                             If N is given, display the last N notes.
-      -g,  --git             Shorthand for "-r -B" (current repo/branch).
-      -xg, --not-git         Shorthand for "-xr -xB" (not current repo/branch).
-      -G,  --all-git         Include all notes from git repositories.
-      -xG, --not-all-git     Exclude all notes from git repositories.
+    SPECIAL FILTERING:
+      -l,  --last [N]     Display the last matching note only.
+                          If N is given, display the last N notes.
+      -g,  --git          Shorthand for "-r -B" (current repo/branch).
+      -x,  --not          Invert the following option.
 
     OTHER:
-      -s, --suppress         Suppress the displaying of notes.
-      -e, --edit             Edit the output in \$EDITOR.
-      -X, --extract          Remove the matched notes after displaying them.
-      --help                 Display this help and exit.
-      --info                 Display information about this script and exit.
-      --version              Display version information and exit.
+      -e, --edit          Edit the output in \$EDITOR.
+      -f, --file          Read notes from a file.
+      -s, --short         Display only the note text (no metadata).
+      -E, --edit-notes    Edit the source \$NOTES_FILE in \$EDITOR.
+      -X, --extract       Remove the matching notes from the notes file.
+      -I, --interactive   Read notes from the user interactively.
+      --help              Display this help and exit.
+      --info              Display information about this script and exit.
+      --version           Display version information and exit.
 
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
