@@ -215,6 +215,10 @@ note_main () {
             ${EDITOR:-vi} "${NOTES_FILE}"
             exit 0
 
+        elif [[ "$option" == "-e" || "$option" == "--edit" ]]; then
+            [[ $flag_not -eq 1 ]] && printf "You can --not-edit all day long.\n" >&2 && exit 1
+            local flag_edit=1
+
         elif [[ "$option" == "-a" || "$option" == "--after" ]]; then
             local flag_output=1
             note_verify_date "$1"
@@ -305,6 +309,14 @@ note_main () {
         notes="$(awk -v m="$mask_message" -F '\t' '$7 !~ m' <<< "$notes")"
     fi
 
+
+    if [[ -n "$flag_edit" ]]; then
+        local tmpfile="$(mktemp)"
+        printf "%s\n" "$notes" > "$tmpfile"
+        ${EDITOR:-vi} "$tmpfile"
+        notes="$(cat "$tmpfile")"
+        rm "$tmpfile"
+    fi
     printf "%s\n" "$notes" | column -t -s $'\t'
 }
 
