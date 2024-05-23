@@ -232,6 +232,11 @@ note_main () {
 
     done
 
+    # If nothing has been done to produce output, exit early
+    if [[ -z "${flag_output}" ]]; then
+        exit 0
+    fi
+
     # If we have gotten this far, we need to output something
     local notes="$(cat "$NOTES_FILE")"
 
