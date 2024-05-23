@@ -155,18 +155,17 @@ note_branch_name () {
 
 
 note_write_line() {
-    local line="$1"
-    local date="$(date '+%Y-%m-%d')"
-    local time="$(date '+%H:%M:%S')"
-    local user="$(whoami)"
-    if [[ note_is_repo ]]; then
-        local repo="$(note_repo_name)"
-        local branch="$(note_branch_name)"
+    local d="$(d '+%Y-%m-%d')"
+    local t="$(d '+%H:%M:%S')"
+    local u="$(whoami)"
+    if [[ note_is_r ]]; then
+        local r="$(note_r_name)"
+        local b="$(note_b_name)"
     else
-        local repo="none"
-        local branch="none"
+        local r="none"
+        local b="none"
     fi
-    echo "$date $time $user $repo $branch $(note_parse_line "$line")" >> "$NOTES_FILE"
+    echo "$d\t$t\t$u\t$r\t$b\t--\t$(note_parse_line "$1")" >> "$NOTES_FILE"
 }
 
 
