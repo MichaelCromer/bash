@@ -210,6 +210,11 @@ note_main () {
             [[ $flag_not -eq 1 ]] && printf "Two wrongs don't make a right.\n" >&2 && exit 1
             local flag_not=1
 
+        elif [[ "$option" == "-E" || "$option" == "--edit-notes" ]]; then
+            [[ $flag_not -eq 1 ]] && printf "You can --not-edit-notes all day long.\n" >&2 && exit 1
+            ${EDITOR:-vi} "${NOTES_FILE}"
+            exit 0
+
         elif [[ "$option" == "-a" || "$option" == "--after" ]]; then
             local flag_output=1
             note_verify_date "$1"
