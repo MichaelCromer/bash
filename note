@@ -300,6 +300,7 @@ note_main () {
         notes="$(awk -v m="$mask_message" -F '\t' '$7 !~ m' <<< "$notes")"
     fi
 
+    printf "%s\n" "$notes" | column -t -s $'\t'
 }
 
 note_main "$@"
