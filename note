@@ -206,7 +206,23 @@ note_main () {
     while [[ $# -gt 0 ]]; do
         local option="$1"
         shift 1
+
+        if [[ "$option" =~ ^"-x".+ || "$option" =~ ^"--not-".+ ]]; then
+            local flag_not=1
+            option="${option/-x/-}"
+            option="${option/--not-/}"
+        fi
+
+        if [[ "$option" == "-x" || "$option" == "--not" ]]; then
+            [[ $flag_not -eq 1 ]] && printf "Two wrongs don't make a right.\n" >&2 && exit 1
+            local flag_not=1
+        else 
+            printf "Invalid option: $option\n" >&2
+            exit 1
+        fi
+
     done
+
 }
 
 note_main "$@"
