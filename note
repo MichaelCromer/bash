@@ -29,7 +29,7 @@ note_show_help () {
       -a,  --after        DATE    Include notes strictly after DATE 
       -b,  --before       DATE    Include notes strictly before DATE 
       -d,  --date         DATE    Include notes exactly on DATE 
-      -m,  --match        STRING  Include notes matching STRING
+      -m,  --message      STRING  Include notes matching STRING
       -R,  --git-repo     NAME    Include notes from git repository NAME
       -B,  --git-branch   NAME    Include notes from git branch NAME
 
@@ -243,6 +243,16 @@ note_main () {
             fi
             shift 1
 
+        elif [[ "$option" == "-m" || "$option" == "--message" ]]; then
+            local flag_output=1
+            if [[ $flag_not -eq 1 ]]; then
+                local args_not_message=( "${args_not_message[@]}" "$1" )
+                flag_not=0
+            else
+                local args_message=( "${args_message[@]}" "$1" )
+            fi
+            shift 1
+
         else 
             printf "Invalid option: $option\n" >&2
             exit 1
@@ -280,6 +290,16 @@ note_main () {
         local mask_date="$(IFS='|'; echo "${args_not_date[*]}")"
         notes="$(awk -v d="$mask_date" -F '\t' '$1 !~ d' <<< "$notes")"
     fi
+
+    if [[ -n "${args_message[@]}" ]]; then
+        local mask_message="$(IFS='|'; echo "${args_message[*]}")"
+        notes="$(awk -v m="$mask_message" -F '\t' '$7 ~ m' <<< "$notes")"
+    fi
+    if [[ -n "${args_not_message[@]}" ]]; then
+        local mask_message="$(IFS='|'; echo "${args_not_message[*]}")"
+        notes="$(awk -v m="$mask_message" -F '\t' '$7 !~ m' <<< "$notes")"
+    fi
+
 }
 
 note_main "$@"
