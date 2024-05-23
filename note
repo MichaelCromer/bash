@@ -231,6 +231,17 @@ note_main () {
             fi
             shift 1
 
+        elif [[ "$option" == "-d" || "$option" == "--date" ]]; then
+            local flag_output=1
+            note_verify_date "$1"
+            if [[ $flag_not -eq 1 ]]; then
+                local args_not_date=( "${args_not_date[@]}" "$1" )
+                flag_not=0
+            else
+                local args_date=( "${args_date[@]}" "$1" )
+            fi
+            shift 1
+
         else 
             printf "Invalid option: $option\n" >&2
             exit 1
@@ -259,6 +270,15 @@ note_main () {
     for before in "${args_not_before[@]}"; do
         notes="$(awk -v b="$before" -F '\t' '$1 <= b' <<< "$notes")"
     done
+
+    if [[ -n "${args_date[@]}" ]]; then
+        local mask_date="$(IFS='|'; echo "${args_date[*]}")"
+        notes="$(awk -v d="$mask_date" -F '\t' '$1 ~ d' <<< "$notes")"
+    fi
+    if [[ -n "${args_not_date[@]}" ]]; then
+        local mask_date="$(IFS='|'; echo "${args_not_date[*]}")"
+        notes="$(awk -v d="$mask_date" -F '\t' '$1 !~ d' <<< "$notes")"
+    fi
 }
 
 note_main "$@"
