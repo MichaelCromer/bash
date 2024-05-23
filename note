@@ -220,6 +220,17 @@ note_main () {
             fi
             shift 1
 
+        elif [[ "$option" == "-b" || "$option" == "--before" ]]; then
+            local flag_output=1
+            note_verify_date "$1"
+            if [[ $flag_not -eq 1 ]]; then
+                local args_not_before=( "${args_not_before[@]}" "$1" )
+                flag_not=0
+            else
+                local args_before=( "${args_before[@]}" "$1" )
+            fi
+            shift 1
+
         else 
             printf "Invalid option: $option\n" >&2
             exit 1
@@ -240,6 +251,13 @@ note_main () {
     done
     for after in "${args_not_after[@]}"; do
         notes="$(awk -v a="$after" -F '\t' '$1 <= a' <<< "$notes")"
+    done
+
+    for before in "${args_before[@]}"; do
+        notes="$(awk -v b="$before" -F '\t' '$1 > b' <<< "$notes")"
+    done
+    for before in "${args_not_before[@]}"; do
+        notes="$(awk -v b="$before" -F '\t' '$1 <= b' <<< "$notes")"
     done
 }
 
