@@ -123,6 +123,7 @@ note_show_version () {
 EOF
 }
 
+
 note_verify_date () {
   local date="$1"
   if ! [[ $date =~ ^[0-9]{4}(-[0-9]{2}){0,2}$ ]]; then
@@ -131,6 +132,7 @@ note_verify_date () {
   fi
 }
 
+
 note_parse_line () {
   local input="$1"
   input="$(echo "$input" | tr -d '\t' )"
@@ -138,9 +140,11 @@ note_parse_line () {
   echo "$input"
 }
 
+
 note_is_repo () {
   git rev-parse --is-inside-work-tree &> /dev/null
 }
+
 
 note_write_line() {
     [[ -z "$1" ]] && return
