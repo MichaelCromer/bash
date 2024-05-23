@@ -262,6 +262,16 @@ note_main () {
             fi
             shift 1
 
+        elif [[ "$option" == "-R" || "$option" == "--git-repo" ]]; then
+            local flag_output=1
+            if [[ $flag_not -eq 1 ]]; then
+                local args_not_repo=( "${args_not_repo[@]}" "$1" )
+                flag_not=0
+            else
+                local args_repo=( "${args_repo[@]}" "$1" )
+            fi
+            shift 1
+
         else 
             printf "Invalid option: $option\n" >&2
             exit 1
@@ -307,6 +317,11 @@ note_main () {
     if [[ -n "${args_not_message[@]}" ]]; then
         local mask_message="$(IFS='|'; echo "${args_not_message[*]}")"
         notes="$(awk -v m="$mask_message" -F '\t' '$7 !~ m' <<< "$notes")"
+    fi
+
+    if [[ -n "${args_repo[@]}" ]]; then
+        local mask_repo="$(IFS='|'; echo "${args_repo[*]}")"
+        notes="$(awk -v m="$mask_repo" -F '\t' '$7 ~ m' <<< "$notes")"
     fi
 
 
