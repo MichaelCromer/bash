@@ -145,27 +145,20 @@ note_is_repo () {
   git rev-parse --is-inside-work-tree &> /dev/null
 }
 
-note_repo_name () {
-  basename "$(git rev-parse --show-toplevel)"
-}
-
-note_branch_name () {
-  git branch --show-current
-}
-
-
 note_write_line() {
-    local d="$(d '+%Y-%m-%d')"
-    local t="$(d '+%H:%M:%S')"
+    [[ -z "$1" ]] && return
+    local d="$(date '+%Y-%m-%d')"
+    local t="$(date '+%H:%M:%S')"
     local u="$(whoami)"
-    if [[ note_is_r ]]; then
-        local r="$(note_r_name)"
-        local b="$(note_b_name)"
+    if [[ note_is_repo ]]; then
+        local g="$(git rev-parse --show-toplevel 2> /dev/null)"
+        local r="$(basename "$g")"
+        local b="$(git branch --show-current)"
     else
         local r="none"
         local b="none"
     fi
-    echo "$d\t$t\t$u\t$r\t$b\t--\t$(note_parse_line "$1")" >> "$NOTES_FILE"
+    printf "$d\t$t\t$u\t$r\t$b\t--\t$(note_parse_line "$1")" >> "$NOTES_FILE"
 }
 
 
