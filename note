@@ -229,6 +229,16 @@ note_main () {
                 local num_last=1
             fi
 
+        elif [[ "$option" == "-g" || "$option" == "--git" ]]; then
+            if [[ $flag_not -eq 1 ]]; then
+                local args_not_repo=( "${args_not_repo[@]}" "$this_repo" )
+                local args_not_branch=( "${args_not_branch[@]}" "$this_branch" )
+                flag_not=0
+            else
+                local args_repo=( "${args_repo[@]}" "$this_repo" )
+                local args_branch=( "${args_branch[@]}" "$this_branch" )
+            fi
+
         elif [[ "$option" == "-a" || "$option" == "--after" ]]; then
             note_verify_date "$1"
             if [[ $flag_not -eq 1 ]]; then
