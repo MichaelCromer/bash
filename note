@@ -351,9 +351,18 @@ note_main () {
         local mask_repo="$(IFS='|'; echo "${args_repo[*]}")"
         notes="$(awk -v m="$mask_repo" -F '\t' '$4 ~ m' <<< "$notes")"
     fi
+    if [[ -n "${args_not_repo[@]}" ]]; then
+        local mask_repo="$(IFS='|'; echo "${args_not_repo[*]}")"
+        notes="$(awk -v m="$mask_repo" -F '\t' '$4 !~ m' <<< "$notes")"
+    fi
+
     if [[ -n "${args_branch[@]}" ]]; then
         local mask_branch="$(IFS='|'; echo "${args_branch[*]}")"
         notes="$(awk -v m="$mask_branch" -F '\t' '$5 ~ m' <<< "$notes")"
+    fi
+    if [[ -n "${args_not_branch[@]}" ]]; then
+        local mask_branch="$(IFS='|'; echo "${args_not_branch[*]}")"
+        notes="$(awk -v m="$mask_branch" -F '\t' '$5 !~ m' <<< "$notes")"
     fi
 
     if [[ -n "${num_last}" ]]; then
