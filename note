@@ -302,12 +302,21 @@ note_main () {
 
         elif [[ "$option" == "-B" || "$option" == "--git-branch" ]]; then
             if [[ $flag_not -eq 1 ]]; then
-                local args_not_branch=( "${args_not_branch[@]}" "$1" )
+                if [[ "$1" =~ ^"-" ]] || [[ -z "$1" ]]; then
+                    local args_not_branch=( "${args_not_branch[@]}" "$this_branch" )
+                else
+                    local args_not_branch=( "${args_not_branch[@]}" "$1" )
+                    shift 1
+                fi
                 flag_not=0
             else
-                local args_branch=( "${args_branch[@]}" "$1" )
+                if [[ "$1" =~ ^"-" ]] || [[ -z "$1" ]]; then
+                    local args_branch=( "${args_branch[@]}" "$this_branch" )
+                else
+                    local args_branch=( "${args_branch[@]}" "$1" )
+                    shift 1
+                fi
             fi
-            shift 1
 
         else 
             printf "Invalid option: $option\n" >&2
