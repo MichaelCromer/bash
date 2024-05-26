@@ -147,7 +147,7 @@ note_write_line() {
         local r="none"
         local b="none"
     fi
-    printf "$d\t$t\t$u\t$r\t$b\t--\t$(note_parse_line "$1")" >> "$NOTES_FILE"
+    printf "$d\t$t\t$u\t$r\t$b\t--\t$(note_parse_line "$1")\n" >> "$NOTES_FILE"
 }
 
 
