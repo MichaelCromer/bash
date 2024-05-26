@@ -187,6 +187,10 @@ note_main () {
         local this_branch="none"
     fi
 
+    if [[ "$1" != "--" ]]; then
+        local flag_output=1
+    fi
+
     while [[ $# -gt 0 ]]; do
         local option="$1"
         shift 1
@@ -220,7 +224,6 @@ note_main () {
             local flag_edit=1
 
         elif [[ "$option" == "-a" || "$option" == "--after" ]]; then
-            local flag_output=1
             note_verify_date "$1"
             if [[ $flag_not -eq 1 ]]; then
                 local args_not_after=( "${args_not_after[@]}" "$1" )
@@ -231,7 +234,6 @@ note_main () {
             shift 1
 
         elif [[ "$option" == "-b" || "$option" == "--before" ]]; then
-            local flag_output=1
             note_verify_date "$1"
             if [[ $flag_not -eq 1 ]]; then
                 local args_not_before=( "${args_not_before[@]}" "$1" )
@@ -242,7 +244,6 @@ note_main () {
             shift 1
 
         elif [[ "$option" == "-d" || "$option" == "--date" ]]; then
-            local flag_output=1
             note_verify_date "$1"
             if [[ $flag_not -eq 1 ]]; then
                 local args_not_date=( "${args_not_date[@]}" "$1" )
@@ -253,7 +254,6 @@ note_main () {
             shift 1
 
         elif [[ "$option" == "-m" || "$option" == "--message" ]]; then
-            local flag_output=1
             if [[ $flag_not -eq 1 ]]; then
                 local args_not_message=( "${args_not_message[@]}" "$1" )
                 flag_not=0
@@ -263,7 +263,6 @@ note_main () {
             shift 1
 
         elif [[ "$option" == "-R" || "$option" == "--git-repo" ]]; then
-            local flag_output=1
             if [[ $flag_not -eq 1 ]]; then
                 local args_not_repo=( "${args_not_repo[@]}" "$1" )
                 flag_not=0
@@ -273,7 +272,6 @@ note_main () {
             shift 1
 
         elif [[ "$option" == "-B" || "$option" == "--git-branch" ]]; then
-            local flag_output=1
             if [[ $flag_not -eq 1 ]]; then
                 local args_not_branch=( "${args_not_branch[@]}" "$1" )
                 flag_not=0
