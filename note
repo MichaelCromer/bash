@@ -12,7 +12,7 @@ fi
 note_show_help () {
   cat << EOF
 ================================================================================
-  Usage: note [OPTIONS] -- [NOTE]      
+  Usage: note [OPTIONS] -- [NOTE]
 --------------------------------------------------------------------------------
   Summary:
     Manage, filter, and display notes from anywhere in your terminal.
@@ -20,8 +20,8 @@ note_show_help () {
   Options:
 
   GENERAL FILTERING:
-    -a, --after      DATE     Match strictly after DATE 
-    -b, --before     DATE     Match strictly before DATE 
+    -a, --after      DATE     Match strictly after DATE
+    -b, --before     DATE     Match strictly before DATE
     -d, --date       [DATE]   Match exactly on DATE (default today)
     -m, --message    STRING   Match STRING in note text
     -u, --user       [STRING] Match STRING in username (default \$USER)
@@ -55,12 +55,12 @@ note_show_info () {
     FILTERING:
       - If no options are given, no filtering is performed, and nothing is
         displayed.
-      - If multiple options are given, they are combined with a logical OR, 
+      - If multiple options are given, they are combined with a logical OR,
         except for --after and --before, which are combined with a logical AND.
       - Dates must be in the format YYYY[-MM[-DD]].
       - If optional arguments are omitted, the 'current' value is used.
       - All string matching is done via awk regular expressions. You can use
-        standard regex metacharacters. To match a literal metacharacter, escape 
+        standard regex metacharacters. To match a literal metacharacter, escape
         it with a backslash.
 
     NOTES:
@@ -80,17 +80,17 @@ note_show_info () {
 
     note -d 2020-01 -- "text"   Display all notes from January 2020,
                                   then add the note "text" to the notes file.
-    
-    note -b 2020-03 -xd 2018-01-10 -m "string1|string2" 
-                                Display all notes from before March 2020, 
+
+    note -b 2020-03 -xd 2018-01-10 -m "string1|string2"
+                                Display all notes from before March 2020,
                                   excluding those from 10 January 2018,
                                   and which match "string1" or "string2".
 
     note -X -l10 -r "my_repo" -xB "hotfix" -m "feature" >> TODO.md
                                 Find the last ten notes which are:
-                                  from the git repository "my_repo"; 
+                                  from the git repository "my_repo";
                                   excluding those from the branch "hotfix";
-                                  and which match "feature". 
+                                  and which match "feature".
                                   append them to the TODO.md file,
                                   and delete them from the notes file.
 ================================================================================
@@ -314,7 +314,7 @@ note_main () {
                 fi
             fi
 
-        else 
+        else
             printf "Invalid option: $option\n" >&2
             exit 1
         fi
