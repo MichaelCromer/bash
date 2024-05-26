@@ -11,90 +11,80 @@ fi
 
 note_show_help () {
   cat << EOF
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
-
+================================================================================
   Usage: note [OPTIONS] -- [NOTE]      
-
 --------------------------------------------------------------------------------
-
   Summary:
     Manage, filter, and display notes from anywhere in your terminal.
-
 --------------------------------------------------------------------------------
-
   Options:
-
     GENERAL FILTERING:
-      -a,  --after        DATE    Include notes strictly after DATE 
-      -b,  --before       DATE    Include notes strictly before DATE 
-      -d,  --date         DATE    Include notes exactly on DATE 
-      -m,  --message      STRING  Include notes matching STRING
-      -R,  --git-repo     NAME    Include notes from git repository NAME
-      -B,  --git-branch   NAME    Include notes from git branch NAME
+      -a, --after      DATE     Match strictly after DATE 
+      -b, --before     DATE     Match strictly before DATE 
+      -d, --date       [DATE]   Match exactly on DATE (default today)
+      -m, --message    STRING   Match STRING in note text
+      -u, --user       [STRING] Match STRING in username (default \$USER)
+      -R, --git-repo   [STRING] Match STRING in git repo name (default curr)
+      -B, --git-branch [STRING] Match STRING in git branch name (default curr)
 
     SPECIAL FILTERING:
-      -l,  --last [N]     Display the last matching note only.
-                          If N is given, display the last N notes.
-      -g,  --git          Shorthand for "-r -B" (current repo/branch).
-      -x,  --not          Invert the following option.
+      -l[N], --last [N]   Display the last [N] matching notes only (default 1)
+      -g, --git           Shorthand for "-R -B" (current repo/branch)
+      -x, --not           Invert the following option.
 
     OTHER:
-      -e, --edit          Edit the output in \$EDITOR.
-      -f, --file          Read notes from a file.
-      -s, --short         Display only the note text (no metadata).
-      -E, --edit-notes    Edit the source \$NOTES_FILE in \$EDITOR.
-      -X, --extract       Remove the matching notes from the notes file.
-      -I, --interactive   Read notes from the user interactively.
-      --help              Display this help and exit.
-      --info              Display information about this script and exit.
-      --version           Display version information and exit.
-
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
+      -e, --edit          Edit the output in \$EDITOR (default vi)
+      -f, --file          Read notes from a file
+      -s, --short         Display only the note text (no metadata)
+      -E, --edit-notes    Edit the source \$NOTES_FILE in \$EDITOR
+      -X, --extract       Remove the matching notes from the notes file
+      -I, --interactive   Read notes from the user interactively
+          --help          Display this help and exit
+          --info          Display information about this script and exit
+          --version       Display version information and exit
+================================================================================
 EOF
 }
 
 note_show_info () {
   cat << EOF
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
-
+================================================================================
   Description:
 
     FILTERING:
-      - Selects for notes matching all given options (logical AND).
-      - If no options are given, no filtering is performed, and nothing is 
-          displayed.
-      - Dates may be in the format YYYY-MM-DD or YYYY-MM or YYYY.
+      - If no options are given, no filtering is performed, and nothing is
+        displayed.
+      - If multiple options are given, they are combined with a logical OR, 
+        except for --after and --before, which are combined with a logical AND.
+      - Dates must be in the format YYYY[-MM[-DD]].
       - If optional arguments are omitted, the 'current' value is used.
-      - All string matching is done via regular expressions. You can use 
-        standard regex metacharacters. To match a literal metacharacter,
-        escape it with a backslash.
+      - All string matching is done via awk regular expressions. You can use
+        standard regex metacharacters. To match a literal metacharacter, escape 
+        it with a backslash.
 
     NOTES:
       - A note must be preceded by the "--" option, to avoid ambiguity.
       - If no "--" is given, or the note is empty, no note is added.
-      - If the current directory is inside a git repository, the repository 
-          name and current branch are automatically recorded.
-      - Username, date, and time of note are also recorded.
-
-
+      - Notes are recorded with the format:
+          DATE    TIME    USER    REPO    BRANCH    --    NOTE TEXT
+      - Git fields is "none" if not in a git repository.
 --------------------------------------------------------------------------------
-
   Examples:
 
     note -- "my new note"       Add the note "my new note" to the notes file.
     note -m "string"            Display all notes matching "string".
     note -a 2023                Display all notes from the year 2023 onwards.
     note -e -d                  Display today's notes in the editor.
+    note -d -X -s               Silently delete all notes from today.
+
     note -d 2020-01 -- "text"   Display all notes from January 2020,
                                   then add the note "text" to the notes file.
-    note -d -X -s               Silently delete all notes from today.
+    
     note -b 2020-03 -xd 2018-01-10 -m "string1|string2" 
                                 Display all notes from before March 2020, 
                                   excluding those from 10 January 2018,
                                   and which match "string1" or "string2".
+
     note -X -l10 -r "my_repo" -xB "hotfix" -m "feature" >> TODO.md
                                 Find the last ten notes which are:
                                   from the git repository "my_repo"; 
@@ -102,9 +92,7 @@ note_show_info () {
                                   and which match "feature". 
                                   append them to the TODO.md file,
                                   and delete them from the notes file.
-
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
+================================================================================
 EOF
 }
 
@@ -115,7 +103,7 @@ note_show_version () {
 
   note version 1.2
   
-  Author:  Michael C. Cromer
+  Author:  Michael Cromer
   License: GNU General Public License v3.0
 
 --------------------------------------------------------------------------------
