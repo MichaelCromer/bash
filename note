@@ -254,14 +254,24 @@ note_main () {
             shift 1
 
         elif [[ "$option" == "-d" || "$option" == "--date" ]]; then
-            note_verify_date "$1"
             if [[ $flag_not -eq 1 ]]; then
-                local args_not_date=( "${args_not_date[@]}" "$1" )
+                if [[ "$1" =~ ^"-" ]] || [[ -z "$1" ]]; then
+                    local args_not_date=( "${args_not_date[@]}" "$today" )
+                else
+                    note_verify_date "$1"
+                    local args_not_date=( "${args_not_date[@]}" "$1" )
+                    shift 1
+                fi
                 flag_not=0
             else
-                local args_date=( "${args_date[@]}" "$1" )
+                if [[ "$1" =~ ^"-" ]] || [[ -z "$1" ]]; then
+                    local args_date=( "${args_date[@]}" "$today" )
+                else
+                    note_verify_date "$1"
+                    local args_date=( "${args_date[@]}" "$1" )
+                    shift 1
+                fi
             fi
-            shift 1
 
         elif [[ "$option" == "-m" || "$option" == "--message" ]]; then
             if [[ $flag_not -eq 1 ]]; then
