@@ -175,6 +175,18 @@ note_main () {
       exit 0
     fi
 
+    local today="$(date '+%Y-%m-%d')"
+    local now="$(date '+%H:%M:%S')"
+    local user="$USER"
+    local this_repo="$(git rev-parse --show-toplevel 2> /dev/null)"
+    local this_branch="$(git branch --show-current 2> /dev/null)"
+    if [[ -n "$this_repo" ]]; then
+        local this_repo="$(basename "$this_repo")"
+    else
+        local this_repo="none"
+        local this_branch="none"
+    fi
+
     while [[ $# -gt 0 ]]; do
         local option="$1"
         shift 1
