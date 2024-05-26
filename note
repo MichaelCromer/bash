@@ -284,12 +284,21 @@ note_main () {
 
         elif [[ "$option" == "-R" || "$option" == "--git-repo" ]]; then
             if [[ $flag_not -eq 1 ]]; then
-                local args_not_repo=( "${args_not_repo[@]}" "$1" )
+                if [[ "$1" =~ ^"-" ]] || [[ -z "$1" ]]; then
+                    local args_not_repo=( "${args_not_repo[@]}" "$this_repo" )
+                else
+                    local args_not_repo=( "${args_not_repo[@]}" "$1" )
+                    shift 1
+                fi
                 flag_not=0
             else
-                local args_repo=( "${args_repo[@]}" "$1" )
+                if [[ "$1" =~ ^"-" ]] || [[ -z "$1" ]]; then
+                    local args_repo=( "${args_repo[@]}" "$this_repo" )
+                else
+                    local args_repo=( "${args_repo[@]}" "$1" )
+                    shift 1
+                fi
             fi
-            shift 1
 
         elif [[ "$option" == "-B" || "$option" == "--git-branch" ]]; then
             if [[ $flag_not -eq 1 ]]; then
