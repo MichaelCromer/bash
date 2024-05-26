@@ -191,7 +191,7 @@ note_main () {
         if [[ "$option" =~ ^"-x".+ || "$option" =~ ^"--not-".+ ]]; then
             local flag_not=1
             option="${option/-x/-}"
-            option="${option/--not-/}"
+            option="${option/--not-/--}"
         fi
 
         if [[ "$option" == "-x" || "$option" == "--not" ]]; then
