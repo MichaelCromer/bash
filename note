@@ -18,30 +18,31 @@ note_show_help () {
     Manage, filter, and display notes from anywhere in your terminal.
 --------------------------------------------------------------------------------
   Options:
-    GENERAL FILTERING:
-      -a, --after      DATE     Match strictly after DATE 
-      -b, --before     DATE     Match strictly before DATE 
-      -d, --date       [DATE]   Match exactly on DATE (default today)
-      -m, --message    STRING   Match STRING in note text
-      -u, --user       [STRING] Match STRING in username (default \$USER)
-      -R, --git-repo   [STRING] Match STRING in git repo name (default curr)
-      -B, --git-branch [STRING] Match STRING in git branch name (default curr)
 
-    SPECIAL FILTERING:
-      -l[N], --last [N]   Display the last [N] matching notes only (default 1)
-      -g, --git           Shorthand for "-R -B" (current repo/branch)
-      -x, --not           Invert the following option.
+  GENERAL FILTERING:
+    -a, --after      DATE     Match strictly after DATE 
+    -b, --before     DATE     Match strictly before DATE 
+    -d, --date       [DATE]   Match exactly on DATE (default today)
+    -m, --message    STRING   Match STRING in note text
+    -u, --user       [STRING] Match STRING in username (default \$USER)
+    -R, --git-repo   [STRING] Match STRING in git repo name (default curr)
+    -B, --git-branch [STRING] Match STRING in git branch name (default curr)
 
-    OTHER:
-      -e, --edit          Edit the output in \$EDITOR (default vi)
-      -f, --file          Read notes from a file
-      -s, --short         Display only the note text (no metadata)
-      -E, --edit-notes    Edit the source \$NOTES_FILE in \$EDITOR
-      -X, --extract       Remove the matching notes from the notes file
-      -I, --interactive   Read notes from the user interactively
-          --help          Display this help and exit
-          --info          Display information about this script and exit
-          --version       Display version information and exit
+  SPECIAL FILTERING:
+    -l[N], --last [N]   Display the last [N] matching notes only (default 1)
+    -g, --git           Shorthand for "-R -B" (current repo/branch)
+    -x, --not           Invert the following option. Can be used like "-xd"
+
+  OTHER:
+    -e, --edit          Edit the output in \$EDITOR (default vi)
+    -f, --file          Read notes from a file
+    -s, --short         Display only the note text (no metadata)
+    -E, --edit-notes    Edit the source \$NOTES_FILE in \$EDITOR
+    -X, --extract       Remove the matching notes from the notes file
+    -I, --interactive   Read notes from the user interactively
+        --help          Display this help and exit
+        --info          Display information about this script and exit
+        --version       Display version information and exit
 ================================================================================
 EOF
 }
@@ -98,16 +99,11 @@ EOF
 
 note_show_version () {
   cat << EOF
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
-
+================================================================================
   note version 1.2
-  
-  Author:  Michael Cromer
-  License: GNU General Public License v3.0
-
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
+    Author:  Michael Cromer
+    License: GNU General Public License v3.0
+================================================================================
 EOF
 }
 
