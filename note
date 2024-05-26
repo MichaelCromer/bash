@@ -130,7 +130,7 @@ note_parse_line () {
 
 
 note_is_repo () {
-  git rev-parse --is-inside-work-tree &> /dev/null
+    git rev-parse --is-inside-work-tree 2> /dev/null
 }
 
 
@@ -139,7 +139,7 @@ note_write_line() {
     local d="$(date '+%Y-%m-%d')"
     local t="$(date '+%H:%M:%S')"
     local u="$(whoami)"
-    if [[ note_is_repo ]]; then
+    if [[ -n $(note_is_repo) ]]; then
         local g="$(git rev-parse --show-toplevel 2> /dev/null)"
         local r="$(basename "$g")"
         local b="$(git branch --show-current)"
