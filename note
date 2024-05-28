@@ -250,6 +250,13 @@ note_main () {
         elif [[ "$option" == "-I" || "$option" == "--interactive" ]]; then
             local flag_interactive=1
 
+        elif [[ "$option" == "-f" || "$option" == "--file" ]]; then
+            if [[ -z "$1" ]]; then
+                printf "No file specified.\n" >&2
+                exit 1
+            fi
+            local file="$1"
+
         elif [[ "$option" == "-a" || "$option" == "--after" ]]; then
             local flag_output=1
             note_verify_date "$1"
