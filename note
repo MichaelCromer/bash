@@ -238,6 +238,18 @@ note_main () {
                 local args_branch=( "${args_branch[@]}" "$this_branch" )
             fi
 
+        elif [[ "$option" == "-s" || "$option" == "--short" ]]; then
+            local flag_short=1
+
+        elif [[ "$option" == "-q" || "$option" == "--quiet" ]]; then
+            local flag_quiet=1
+
+        elif [[ "$option" == "-X" || "$option" == "--extract" ]]; then
+            local flag_extract=1
+
+        elif [[ "$option" == "-I" || "$option" == "--interactive" ]]; then
+            local flag_interactive=1
+
         elif [[ "$option" == "-a" || "$option" == "--after" ]]; then
             local flag_output=1
             note_verify_date "$1"
