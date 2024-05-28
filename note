@@ -35,9 +35,10 @@ note_show_help () {
 
   OTHER:
     -e, --edit          Edit the output in \$EDITOR (default vi)
+    -E, --edit-notes    Edit the source \$NOTES_FILE in \$EDITOR
     -f, --file          Read notes from a file
     -s, --short         Display only the note text (no metadata)
-    -E, --edit-notes    Edit the source \$NOTES_FILE in \$EDITOR
+    -q, --quiet         Suppress all output
     -X, --extract       Remove the matching notes from the notes file
     -I, --interactive   Read notes from the user interactively
         --help          Display this help and exit
