@@ -404,9 +404,7 @@ note_main () {
         notes="$(awk -v m="$mask_branch" -F '\t' '$5 !~ m' <<< "$notes")"
     fi
 
-    if [[ -n "${num_last}" ]]; then
-        notes="$(tail -n "${num_last}" <<< "$notes")"
-    fi
+    [[ -n "${num_last}" ]] && notes="$(tail -n "${num_last}" <<< "$notes")"
     [[ -n "$flag_short" ]] && notes="$(awk -F '\t' '{print $7}' <<< "$notes")"
 
     if [[ -n "$flag_edit" ]]; then
