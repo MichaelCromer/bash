@@ -407,6 +407,7 @@ note_main () {
     if [[ -n "${num_last}" ]]; then
         notes="$(tail -n "${num_last}" <<< "$notes")"
     fi
+    [[ -n "$flag_short" ]] && notes="$(awk -F '\t' '{print $7}' <<< "$notes")"
 
     if [[ -n "$flag_edit" ]]; then
         local tmpfile="$(mktemp)"
@@ -415,6 +416,8 @@ note_main () {
         notes="$(cat "$tmpfile")"
         rm "$tmpfile"
     fi
+
+    [[ -n "$flag_quiet" ]] && exit 0
     printf "%s\n" "$notes" | column -t -s $'\t'
 }
 
