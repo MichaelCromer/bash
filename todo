@@ -75,7 +75,7 @@ function todo_help() {
     -uN     Mark done item N as undone
     -D[N]   Print top N done items
     -U[N]   Print top N undone items
-    -A[N]   Combines -UN and -DN 
+    -A[N]   Combines -UN and -DN
     -E      Edit todo file
     --help  Print this help message
 ========================================
@@ -90,7 +90,7 @@ function todo_main() {
     fi
 
     [[ "$1" =~ ^-.[0-9]+$ ]] && local num="${1:2}"
-    [[ -z "$num" ]] && num="$2" 
+    [[ -z "$num" ]] && num="$2"
     [[ ! "$num" =~ ^[0-9]*$ ]] && printf "Invalid number: $num\n" && exit 1
 
     if [[ "$1" == "-E" || "$1" == "--edit" ]]; then
