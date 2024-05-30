@@ -127,7 +127,7 @@ function git_prompt() {
     local state=$(git_state)
     local colour=$(git_colour)
 
-    echo -e "\x01$BOLD_WHITE\x02 | [$(basename $repo)]/\x01$colour\x02($branch)$state\x01$RESET\x02"
+    echo -e "\x01$BOLD_WHITE\x02 | $(basename $repo)/\x01$colour\x02$branch$state\x01$RESET\x02"
 }
 
 PS1="\[$BOLD_WHITE\]==> "
