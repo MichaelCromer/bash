@@ -10,6 +10,14 @@ function todo_list() {
     cat -n $TODO_FILE
 }
 
+function todo_undone() {
+    sed -n "/\[ \]/p" $TODO_FILE | sort --k=1 --t=$(printf "\t")
+}
+
+function todo_done() {
+    sed -n "/\[X\]/p" $TODO_FILE | sort --k=2 --t=$(printf "\t")
+}
+
 function todo_edit() {
     ${EDITOR:-vi} $TODO_FILE
 }
