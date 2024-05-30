@@ -42,12 +42,11 @@ function todo_main() {
 
     if [[ "$1" == "-E" || "$1" == "--edit" ]]; then
         todo_edit
-        exit 0
     elif [[ "$1" =~ ^-[0-9]+$ ]]; then
         todo_print "$(todo_undone)" "${1:1}" | tail -n 1
+    else
+        todo_write "$@"
     fi
-
-    todo_write "$@"
 
     exit 0
 }
