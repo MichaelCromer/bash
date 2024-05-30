@@ -6,9 +6,6 @@ function todo_stamp() {
     date +"%Y-%m-%d %H:%M:%S"
 }
 
-function todo_list() {
-    cat -n $TODO_FILE
-}
 
 function todo_undone() {
     sed -n "/\[ \]/p" $TODO_FILE | sort --k=1 --t=$(printf "\t")
