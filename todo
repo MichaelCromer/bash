@@ -31,7 +31,7 @@ function todo_edit() {
 }
 
 function todo_write() {
-    printf "$(todo_stamp)\t--\t[] $@\n" >> $TODO_FILE
+    printf "$(todo_stamp)\t--\t[ ] $@\n" >> $TODO_FILE
 }
 
 function todo_main() {
