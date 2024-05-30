@@ -45,6 +45,17 @@ function todo_do() {
     sed -i "${num}s/--\t\[ \]/$(todo_stamp)\t\[X\]/" $TODO_FILE
 }
 
+function todo_undo() {
+    local mark="$1"
+    [[ -z "$mark" ]] && printf "No item number given\n" && exit 1
+
+    local line=$(sed -n "$mark p" <<< "$(todo_done)")
+    [[ -z "$line" ]] && printf "Invalid item number: $mark\n" && exit 1
+
+    local num=$(awk -F"\t" -v line="$line" '$0 == line {print NR}' "$TODO_FILE")
+    sed -i "${num}s/[0-9: -]\+\t\[X\]/--\t[ ]/" $TODO_FILE
+}
+
 function todo_main() {
     if [[ $# -eq 0 ]]; then
         todo_print "$(todo_undone)"
@@ -67,6 +78,8 @@ function todo_main() {
         cat <(todo_print "$(todo_undone)" "$num") <(todo_print "$(todo_done)" "$num")
     elif [[ "$1" =~ ^-d[0-9]*$ ]]; then
         todo_do "$num"
+    elif [[ "$1" =~ ^-u[0-9]*$ ]]; then
+        todo_undo "$num"
     else
         todo_write "$@"
     fi
