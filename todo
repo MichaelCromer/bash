@@ -34,23 +34,27 @@ function todo_write() {
     printf "$(todo_stamp)\t--\t[ ] $@\n" >> $TODO_FILE
 }
 
-function todo_do() {
-    local mark="$1"
-    [[ -z "$mark" ]] && printf "No item number given\n" && exit 1
 
-    local line=$(sed -n "$mark p" <<< "$(todo_undone)")
-    [[ -z "$line" ]] && printf "Invalid item number: $mark\n" && exit 1
+function todo_findline() {
+    [[ -z "$2" ]] && printf "No item number given\n" >&2 && exit 1
+    local line=$(sed -n "$2 p" <<< "$1")
+    [[ -z "$line" ]] && printf "Invalid item number: $2\n" >&2 && exit 1
+    echo "$line"
+}
+
+
+function todo_do() {
+    local line=$(todo_findline "$(todo_undone)" "$1")
+    [[ -z "$line" ]] && exit 1
 
     local num=$(awk -F"\t" -v line="$line" '$0 == line {print NR}' "$TODO_FILE")
     sed -i "${num}s/--\t\[ \]/$(todo_stamp)\t\[X\]/" $TODO_FILE
 }
 
-function todo_undo() {
-    local mark="$1"
-    [[ -z "$mark" ]] && printf "No item number given\n" && exit 1
 
-    local line=$(sed -n "$mark p" <<< "$(todo_done)")
-    [[ -z "$line" ]] && printf "Invalid item number: $mark\n" && exit 1
+function todo_undo() {
+    local line=$(todo_findline "$(todo_done)" "$1")
+    [[ -z "$line" ]] && exit 1
 
     local num=$(awk -F"\t" -v line="$line" '$0 == line {print NR}' "$TODO_FILE")
     sed -i "${num}s/[0-9: -]\+\t\[X\]/--\t[ ]/" $TODO_FILE
