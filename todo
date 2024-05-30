@@ -40,10 +40,16 @@ function todo_main() {
         exit 0
     fi
 
+    [[ "$1" =~ ^-.[0-9]+$ ]] && local num="${1:2}"
+    [[ -z "$num" ]] && num="$2" 
+    [[ ! "$num" =~ ^[0-9]*$ ]] && printf "Invalid number: $num\n" && exit 1
+
     if [[ "$1" == "-E" || "$1" == "--edit" ]]; then
         todo_edit
     elif [[ "$1" =~ ^-[0-9]+$ ]]; then
         todo_print "$(todo_undone)" "${1:1}" | tail -n 1
+    elif [[ "$1" =~ ^-U[0-9]*$ ]]; then
+        todo_print "$(todo_undone)" "$num"
     else
         todo_write "$@"
     fi
