@@ -18,6 +18,14 @@ function todo_done() {
     sed -n "/\[X\]/p" $TODO_FILE | sort --k=2 --t=$(printf "\t")
 }
 
+function todo_print() {
+    local lines=$(sed 's/^.*\t//' <<< "$1")
+    local num="$2"
+
+    [[ -n "$num" ]] && lines=$(head -n $num <<< "$lines")
+    nl <<< "$lines"
+}
+
 function todo_edit() {
     ${EDITOR:-vi} $TODO_FILE
 }
