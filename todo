@@ -1,9 +1,6 @@
 #!/bin/bash
 
 TODO_FILE="$HOME/.todo"
-if [[ ! -f $TODO_FILE ]]; then
-    touch $TODO_FILE
-fi
 
 function todo_list() {
     cat -n $TODO_FILE
