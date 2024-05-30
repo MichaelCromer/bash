@@ -50,6 +50,10 @@ function todo_main() {
         todo_print "$(todo_undone)" "${1:1}" | tail -n 1
     elif [[ "$1" =~ ^-U[0-9]*$ ]]; then
         todo_print "$(todo_undone)" "$num"
+    elif [[ "$1" =~ ^-D[0-9]*$ ]]; then
+        todo_print "$(todo_done)" "$num"
+    elif [[ "$1" =~ ^-A[0-9]*$ ]]; then
+        cat <(todo_print "$(todo_undone)" "$num") <(todo_print "$(todo_done)" "$num")
     else
         todo_write "$@"
     fi
