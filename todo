@@ -2,6 +2,10 @@
 
 TODO_FILE="$HOME/.todo"
 
+function todo_stamp() {
+    date +"%Y-%m-%d %H:%M:%S"
+}
+
 function todo_list() {
     cat -n $TODO_FILE
 }
