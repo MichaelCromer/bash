@@ -63,6 +63,26 @@ function todo_undo() {
 }
 
 
+function todo_help() {
+    cat <<EOF
+========================================
+  Usage: todo [OPTION[NUM]]|[TEXT]
+----------------------------------------
+  Options:
+    (empty) Print undone items
+    -N      Print undone item N
+    -dN     Mark undone item N as done
+    -uN     Mark done item N as undone
+    -D[N]   Print top N done items
+    -U[N]   Print top N undone items
+    -A[N]   Combines -UN and -DN 
+    -E      Edit todo file
+    --help  Print this help message
+========================================
+EOF
+}
+
+
 function todo_main() {
     if [[ $# -eq 0 ]]; then
         todo_print "$(todo_undone)"
@@ -87,6 +107,8 @@ function todo_main() {
         todo_do "$num"
     elif [[ "$1" =~ ^-u[0-9]*$ ]]; then
         todo_undo "$num"
+    elif [[ "$1" == "--help" ]]; then
+        todo_help
     else
         todo_write "$@"
     fi
