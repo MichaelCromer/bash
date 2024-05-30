@@ -36,13 +36,15 @@ function todo_write() {
 
 function todo_main() {
     if [[ $# -eq 0 ]]; then
-        todo_list
+        todo_print "$(todo_undone)"
         exit 0
     fi
 
     if [[ "$1" == "-E" || "$1" == "--edit" ]]; then
         todo_edit
         exit 0
+    elif [[ "$1" =~ ^-[0-9]+$ ]]; then
+        todo_print "$(todo_undone)" "${1:1}" | tail -n 1
     fi
 
     todo_write "$@"
