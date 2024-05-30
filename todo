@@ -2,6 +2,7 @@
 
 TODO_FILE="$HOME/.todo"
 
+
 function todo_stamp() {
     date +"%Y-%m-%d %H:%M:%S"
 }
@@ -11,9 +12,11 @@ function todo_undone() {
     sed -n "/\[ \]/p" $TODO_FILE | sort --k=1 --t=$(printf "\t")
 }
 
+
 function todo_done() {
     sed -n "/\[X\]/p" $TODO_FILE | sort --k=2 --t=$(printf "\t")
 }
+
 
 function todo_print() {
     local lines=$(sed 's/^.*\t//' <<< "$1")
@@ -23,9 +26,11 @@ function todo_print() {
     nl <<< "$lines"
 }
 
+
 function todo_edit() {
     ${EDITOR:-vi} $TODO_FILE
 }
+
 
 function todo_write() {
     printf "$(todo_stamp)\t--\t[ ] $@\n" >> $TODO_FILE
@@ -56,6 +61,7 @@ function todo_undo() {
     local num=$(awk -F"\t" -v line="$line" '$0 == line {print NR}' "$TODO_FILE")
     sed -i "${num}s/[0-9: -]\+\t\[X\]/--\t[ ]/" $TODO_FILE
 }
+
 
 function todo_main() {
     if [[ $# -eq 0 ]]; then
