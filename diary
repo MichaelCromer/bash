@@ -1,0 +1,78 @@
+#!/bin/bash
+
+DIARY_YEAR=$(date +%Y)
+DIARY_MONTH=$(date +%m)
+DIARY_DAY=$(date +%d)
+
+DIARY_DIR=~/diary/${DIARY_YEAR}/${DIARY_MONTH}
+DIARY_FILE=${DIARY_DIR}/${DIARY_DAY}.md
+
+
+function diary_head()
+{
+    printf "# %s\n" "$(date "+%A, %d %B %Y")"
+}
+
+
+function diary_subh()
+{
+    printf "## %s\n" "$(date "+%I%p")"
+}
+
+
+function diary_add()
+{
+    printf "%s\n" "$@" >> ${DIARY_FILE}
+}
+
+
+function diary_hour()
+{
+    sed -n "/^##\s\+[0-9]\+[aApP][mM]$/p" "$DIARY_FILE" | tail -n 1
+}
+
+
+function diary_feed()
+{
+    echo "" >> "$DIARY_FILE"
+}
+
+
+function diary_check()
+{
+    [[ ! -d ${DIARY_DIR} ]] && mkdir -p ${DIARY_DIR}
+    [[ ! -f ${DIARY_FILE} ]] && diary_add "$(diary_head)"
+}
+
+
+function diary_print()
+{
+    cat ${DIARY_FILE}
+}
+
+
+function diary_edit()
+{
+    ${EDITOR:-vim} ${DIARY_FILE}
+}
+
+
+function diary_update()
+{
+    [[ $(diary_hour) != $(diary_subh) ]] && diary_feed && diary_add "$(diary_subh)"
+    diary_add " - [$(date "+%M")] $*"
+}
+
+function diary_main()
+{
+    diary_check
+
+    [[ $# -eq 0 ]] && diary_print && exit 0
+    [[ "$1" == "-E" ]] && diary_edit && exit 0
+
+    diary_update "$*"
+
+    exit 0
+}
+
+diary_main "$@"
