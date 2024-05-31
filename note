@@ -12,7 +12,7 @@ fi
 
 function note_short_help()
 {
-    printf << EOF
+    cat << EOF
 ========================================
   Usage: note [OPTIONS] -- [NOTE]
 ----------------------------------------
