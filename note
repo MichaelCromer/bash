@@ -214,14 +214,21 @@ function note_main ()
             option="${option/--not-/--}"
         fi
 
-        [[ "$option" == "-s" || "$option" == "--short" ]] && local flag_short=1
-        [[ "$option" == "-q" || "$option" == "--quiet" ]] && local flag_quiet=1
-        [[ "$option" == "-X" || "$option" == "--extract" ]] && local flag_extract=1
-        [[ "$option" == "-I" || "$option" == "--interactive" ]] && local flag_inter=1
-
         if [[ "$option" == "-x" || "$option" == "--not" ]]; then
             [[ $flag_not -eq 1 ]] && printf "Two wrongs don't make a right.\n" >&2 && exit 1
             local flag_not=1
+
+        elif [[ "$option" == "-s" || "$option" == "--short" ]]; then
+            local flag_short=1
+
+        elif [[ "$option" == "-q" || "$option" == "--quiet" ]]; then
+            local flag_quiet=1
+
+        elif [[ "$option" == "-X" || "$option" == "--extract" ]]; then
+            local flag_extract=1
+
+        elif [[ "$option" == "-I" || "$option" == "--interactive" ]]; then
+            local flag_interactive=1
 
         elif [[ "$option" == "-E" || "$option" == "--edit-notes" ]]; then
             [[ $flag_not -eq 1 ]] && printf "You can --not-edit-notes all day long.\n" >&2 && exit 1
