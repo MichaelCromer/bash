@@ -9,6 +9,20 @@ if [[ ! -f "$NOTES_FILE" ]]; then
   touch "$NOTES_FILE"
 fi
 
+
+function note_short_help()
+{
+    printf << EOF
+========================================
+  Usage: note [OPTIONS] -- [NOTE]
+----------------------------------------
+  Manage, filter, and display notes.
+  Use 'note --help' for more info.
+========================================
+EOF
+}
+
+
 function note_show_help ()
 {
   cat << EOF
