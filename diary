@@ -63,11 +63,31 @@ function diary_update()
     diary_add " - [$(date "+%M")] $*"
 }
 
+
+diary_help()
+{
+    cat <<EOF
+========================================
+  Usage: diary [OPTION|MESSAGE]
+----------------------------------------
+  Manage your daily diary.
+  Stored in ~/.diary/YYYY/MM/DD.md
+
+  Options:
+    -E      Edit today's diary file.
+    --help  Display this help message.
+========================================
+EOF
+}
+
+
+
 function diary_main()
 {
     diary_check
 
     [[ $# -eq 0 ]] && diary_print && exit 0
+    [[ "$1" == "--help" ]] && diary_help && exit 0
     [[ "$1" == "-E" ]] && diary_edit && exit 0
 
     diary_update "$*"
