@@ -16,7 +16,7 @@ function diary_head()
 
 function diary_subh()
 {
-    printf "## %s\n" "$(date "+%I%p")"
+    printf "## %s\n" "$(date "+%_I%p")"
 }
 
 
