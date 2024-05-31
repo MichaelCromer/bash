@@ -9,7 +9,8 @@ if [[ ! -f "$NOTES_FILE" ]]; then
   touch "$NOTES_FILE"
 fi
 
-note_show_help () {
+function note_show_help ()
+{
   cat << EOF
 ================================================================================
   Usage: note [OPTIONS] -- [NOTE]
@@ -48,7 +49,9 @@ note_show_help () {
 EOF
 }
 
-note_show_info () {
+
+function note_show_info ()
+{
   cat << EOF
 ================================================================================
   Description:
@@ -98,7 +101,9 @@ note_show_info () {
 EOF
 }
 
-note_show_version () {
+
+function note_show_version ()
+{
   cat << EOF
 ================================================================================
   note version 1.2
@@ -109,7 +114,8 @@ EOF
 }
 
 
-note_verify_date () {
+function note_verify_date ()
+{
   local date="$1"
   if ! [[ $date =~ ^[0-9]{4}(-[0-9]{2}){0,2}$ ]]; then
     echo "Invalid date format (must be YYYY[-MM[-DD]]): $date" >&2
@@ -118,7 +124,8 @@ note_verify_date () {
 }
 
 
-note_parse_line () {
+function note_parse_line ()
+{
   local input="$1"
   input="$(echo "$input" | tr -d '\t' )"
   input="$(sed 's/[\*;&<>`|]/\\&/g' <<< "$input")"
@@ -126,12 +133,14 @@ note_parse_line () {
 }
 
 
-note_is_repo () {
+function note_is_repo ()
+{
     git rev-parse --is-inside-work-tree 2> /dev/null
 }
 
 
-note_write_line() {
+function note_write_line()
+{
     [[ -z "$1" ]] && return
     local d="$(date '+%Y-%m-%d')"
     local t="$(date '+%H:%M:%S')"
@@ -148,7 +157,8 @@ note_write_line() {
 }
 
 
-note_read_stdin() {
+function note_read_stdin()
+{
     while IFS= read -r line; do
         note_write_line "$line"
     done < /dev/stdin
