@@ -71,7 +71,7 @@ diary_help()
   Usage: diary [OPTION|MESSAGE]
 ----------------------------------------
   Manage your daily diary.
-  Stored in ~/.diary/YYYY/MM/DD.md
+  Stored in ~/diary/YYYY/MM/DD.md
 
   Options:
     -E      Edit today's diary file.
