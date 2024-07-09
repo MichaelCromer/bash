@@ -20,6 +20,14 @@ BOLD_WHITE="\033[1;37m"
 
 RESET="\033[0m"
 
+CHAR_STAGED="+"
+CHAR_UNSTAGED="*"
+CHAR_UNTRACKED="?"
+CHAR_CONFLICT="!"
+CHAR_AHEAD="Δ"
+CHAR_BEHIND="∇"
+CHAR_STASH="$"
+
 function is_git_repo() {
   echo $(git rev-parse --is-inside-work-tree 2> /dev/null)
 }
