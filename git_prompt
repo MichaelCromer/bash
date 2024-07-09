@@ -57,38 +57,38 @@ function git_branch() {
 }
 
 function git_state() {
-    # ## string showing various kinds of working tree state
-    #
-    # - `!` conflicted state
-    # - `?` untracked files
-    # - `*` unstaged changes
-    # - `+` staged changes
-    #
-    # - `∆[n]` ahead of remote (by n commits)
-    # - `∇[n]` behind remote (by n commits)
-    # - `$[n]` stashed changes (n stashes)
-    #
-    local status=$(git status --porcelain 2> /dev/null)
-    local stashes=$(git stash list 2> /dev/null | wc -l)
-    local ahead=$(git rev-list --count @{u}..HEAD 2> /dev/null)
-    local behind=$(git rev-list --count HEAD..@{u} 2> /dev/null)
-    local output=""
+  # ## string showing various kinds of working tree state
+  #
+  # - `!` conflicted state
+  # - `?` untracked files
+  # - `*` unstaged changes
+  # - `+` staged changes
+  #
+  # - `∆[n]` ahead of remote (by n commits)
+  # - `∇[n]` behind remote (by n commits)
+  # - `$[n]` stashed changes (n stashes)
+  #
+  local status=$(git status --porcelain 2> /dev/null)
+  local stashes=$(git stash list 2> /dev/null | wc -l)
+  local ahead=$(git rev-list --count @{u}..HEAD 2> /dev/null)
+  local behind=$(git rev-list --count HEAD..@{u} 2> /dev/null)
+  local output=""
 
-    [[ "$status" =~ ^UU ]] && output+="!"
-    [[ "$status" =~ ^"\?\?" ]] && output+="?"
-    [[ "$status" =~ ^.[MTARC] ]] && output+="*"
-    [[ "$status" =~ ^[MTARC] ]] && output+="+"
-    
-    [[ "$stashes" == 1 ]] && output+="\$"
-    [[ "$stashes" -gt 1 ]] && output+=" \$$stashes"
+  [[ -n $(grep '^[MADRC]' <<< "$status") ]] && output+=$CHAR_STAGED
+  [[ -n $(grep '^.[MD]' <<< "$status") ]] && output+="$CHAR_UNSTAGED"
+  [[ -n $(grep '^??' <<< "$status") ]] && output+="$CHAR_UNTRACKED"
+  [[ -n $(grep '^UU' <<< "$status") ]] && output+="$CHAR_CONFLICT"
+  
+  [[ "$stashes" == 1 ]] && output+="$CHAR_STASH"
+  [[ "$stashes" -gt 1 ]] && output+=" $CHAR_SASH$stashes"
 
-    [[ "$ahead" == 1 ]] && output+="∆"
-    [[ "$ahead" -gt 1 ]] && output+=" ∆$ahead"
+  [[ "$ahead" == 1 ]] && output+="$CHAR_AHEAD"
+  [[ "$ahead" -gt 1 ]] && output+=" $CHAR_AHEAD$ahead"
 
-    [[ "$behind" == 1 ]] && output+="∇"
-    [[ "$behind" -gt 1 ]] && output+=" ∇$behind"
+  [[ "$behind" == 1 ]] && output+="$CHAR_BEHIND"
+  [[ "$behind" -gt 1 ]] && output+=" $CHAR_BEHIND$behind"
 
-    echo "$output"
+  echo "$output"
 }
 
 function git_colour() {
