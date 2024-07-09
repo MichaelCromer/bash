@@ -78,7 +78,7 @@ function git_state() {
   [[ -n $(grep '^.[MD]' <<< "$status") ]] && output+="$CHAR_UNSTAGED"
   [[ -n $(grep '^??' <<< "$status") ]] && output+="$CHAR_UNTRACKED"
   [[ -n $(grep '^UU' <<< "$status") ]] && output+="$CHAR_CONFLICT"
-  
+
   [[ "$stashes" == 1 ]] && output+="$CHAR_STASH"
   [[ "$stashes" -gt 1 ]] && output+=" $CHAR_SASH$stashes"
 
@@ -101,7 +101,7 @@ function git_colour() {
     # - conflicted or diverged : red
     #
     # - unstable (stash, ahead, behind) : cyan 
-    
+
     local state=$(git_state)
 
     local is_staged=$([[ "$state" =~ \+ ]] && echo 1)
@@ -135,7 +135,7 @@ function git_prompt() {
     # ## string showing git branch and state
     #
     # - "[repo]/(branch)state"
-    
+
     local repo=$(git rev-parse --show-toplevel 2> /dev/null)
     [[ -z "$repo" ]] && return
 
