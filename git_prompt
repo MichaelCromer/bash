@@ -25,24 +25,27 @@ function is_git_repo() {
 }
 
 function git_branch() {
-    # ## string showing branch and head state
+  # get the repo info
+  local branch_name=$(git branch --show-current 2> /dev/null)
+  local git_path=$(git rev-parse --show-toplevel 2> /dev/null)
+  local git_shorthash=$(git rev-parse --short HEAD 2> /dev/null)
 
-    local branch=$(git rev-parse --abbrev-ref HEAD 2> /dev/null)
-    local is_merging=$([[ -f .git/MERGE_HEAD ]] && echo 1)
-    local is_rebasing=$([[ -f .git/rebase-apply/next ]] && echo 1)
-    local is_cherry_picking=$([[ -f .git/CHERRY_PICK_HEAD ]] && echo 1)
-    local is_bisecting=$([[ -f .git/BISECT_LOG ]] && echo 1)
-    local is_detached=$(git symbolic-ref -q HEAD 2> /dev/null)
+  # check if we are in a special state
+  local is_merging=$([[ -f .git/MERGE_HEAD ]] && echo 1)
+  local is_rebasing=$([[ -d .git/rebase-apply  || -d "$git_path"/.git/rebase-merge ]] && echo 1)
+  local is_cherry_picking=$([[ -f .git/CHERRY_PICK_HEAD ]] && echo 1)
+  local is_bisecting=$([[ -f .git/BISECT_LOG ]] && echo 1)
+  local is_detached=$([[ -z "$branch_name" ]] && echo 1)
 
-    local output=""
-    [[ -n "$branch" ]] && output+="$branch"
-    [[ "$is_merging" ]] && output+="|MERGE"
-    [[ "$is_rebasing" ]] && output+="|REBASE"
-    [[ "$is_cherry_picking" ]] && output+="|CHERRY-PICK"
-    [[ "$is_bisecting" ]] && output+="|BISECT"
-    [[ -z "$is_detached" ]] && output="DETACHED|$output"
+  # apply the appropriate modifications
+  local output="$branch_name"
+  [[ -n "$is_detached" ]] && output="($git_shorthash)"
+  [[ -n "$is_merging" ]] && output+="|MERGE"
+  [[ -n "$is_rebasing" ]] && output+="|REBASE"
+  [[ -n "$is_cherry_picking" ]] && output+="|CHERRY-PICK"
+  [[ -n "$is_bisecting" ]] && output+="|BISECT"
 
-    echo "$output"
+  echo "$output"
 }
 
 function git_state() {
