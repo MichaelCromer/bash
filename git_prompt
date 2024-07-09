@@ -92,43 +92,46 @@ function git_state() {
 }
 
 function git_colour() {
-    # ## calculates a colour based on the output of git_state
-    #
-    # - clean : white
-    # - staged : green
-    # - unstaged : yellow
-    # - mixed : 'orange' (bold yellow)
-    # - conflicted or diverged : red
-    #
-    # - unstable (stash, ahead, behind) : cyan 
+  # ## calculates a colour based on the output of git_state
+  #
+  # - conflicted or diverged : red
+  # - staged : green
+  # - unstaged : yellow
+  # - mixed : 'orange' (bold yellow)
+  # - clean : white
+  #
+  # - unstable (stash, ahead, behind) : cyan
 
-    local state=$(git_state)
+  local state=$(git_state)
 
-    local is_staged=$([[ "$state" =~ \+ ]] && echo 1)
-    local is_unstaged=$([[ "$state" =~ \* ]] && echo 1)
-    local is_untracked=$([[ "$state" =~ \? ]] && echo 1)
-    local is_conflicted=$([[ "$state" =~ ! ]] && echo 1)
-    local is_diverged=$([[ "$state" =~ ∆ ]] && [[ "$state" =~ ∇ ]] && echo 1)
+  local is_staged=$([[ "$state" =~ "$CHAR_STAGED" ]] && echo 1)
+  local is_unstaged=$([[ "$state" =~ "$CHAR_UNSTAGED" ]] && echo 1)
+  local is_untracked=$([[ "$state" =~ "$CHAR_UNTRACKED" ]] && echo 1)
+  local is_conflict=$([[ "$state" =~ "$CHAR_CONFLICT" ]] && echo 1)
 
-    local is_stash=$([[ "$state" =~ \$ ]] && echo 1)
-    local is_ahead=$([[ "$state" =~ ∆ ]] && echo 1)
-    local is_behind=$([[ "$state" =~ ∇ ]] && echo 1)
+  local is_stash=$([[ "$state" =~ "$CHAR_STASH" ]] && echo 1)
+  local is_ahead=$([[ "$state" =~ "$CHAR_AHEAD" ]] && echo 1)
+  local is_behind=$([[ "$state" =~ "$CHAR_BEHIND" ]] && echo 1)
+  local is_diverged=$([[ -n $is_ahead && -n $is_behind ]] && echo 1)
 
-    if [[ -n "$is_conflicted" || -n "$is_diverged" ]]; then
-        echo -e $BOLD_RED
-    elif [[ -n "$is_staged" && -n "$is_unstaged" ]]; then
-        echo -e $BOLD_YELLOW
-    elif [[ -n "$is_staged" ]]; then
-        echo -e $BOLD_GREEN
-    elif [[ -n "$is_unstaged" ]]; then
-        echo -e $YELLOW
-    elif [[ -n "$is_untracked" ]]; then
-        echo -e $MAGENTA
-    elif [[ -n "$is_stash" || -n "$is_ahead" || -n "$is_behind" ]]; then
-        echo -e $BOLD_CYAN
-    else
-        echo -e $WHITE
-    fi
+  local is_problem=$([[ -n $is_diverged || -n $is_conflict ]] && echo 1)
+  local is_dirty=$([[ -n $is_unstaged || -n $is_untracked ]] && echo 1)
+  local is_mixed=$([[ -n $is_dirty && -n $is_staged ]] && echo 1)
+  local is_unstable=$([[ -n $is_stash || -n $is_ahead || -n $is_behind ]] && echo 1)
+
+  if [[ -n $is_problem ]]; then
+    echo -e $BOLD_RED
+  elif [[ -n $is_mixed ]]; then
+    echo -e $BOLD_MAGENTA
+  elif [[ -n $is_dirty ]]; then
+    echo -e $BOLD_YELLOW
+  elif [[ -n $is_staged ]]; then
+    echo -e $BOLD_GREEN
+  elif [[ -n $is_unstable ]]; then
+    echo -e $BOLD_CYAN
+  else
+    echo -e $WHITE
+  fi
 }
 
 function git_prompt() {
