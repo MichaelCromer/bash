@@ -1,0 +1,20 @@
+#!/bin/sh
+#
+# Change master volume using pactl
+#
+# volume [UP|DN|MT]
+#
+
+STEP=5
+arg="$1"
+
+if [[ "$arg" == "UP" ]]; then
+    pactl set-sink-volume @DEFAULT_SINK@ "+%$STEP"
+elif [[ "$arg" == "DN" ]]; then
+    pactl set-sink-volume @DEFAULT_SINK@ "-%$STEP"
+elif [[ "$arg" == "MT" ]]; then
+    pactl set-sink-mute @DEFAULT_SINK@ toggle
+else
+    printf "volume : Unrecognised command %s\n" "$1"
+    printf "volume : usage \'volume [UP|DN|MT]\'\n"
+fi
