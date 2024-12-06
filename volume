@@ -1,0 +1,22 @@
+#!/bin/sh
+#
+# Change master volume using pactl
+#
+# volume [RAISE|LOWER|MUTES|MUTEM]
+#
+
+STEP=5
+arg="$1"
+
+if [[ "$arg" == "RAISE" ]]; then
+    pactl set-sink-volume @DEFAULT_SINK@ "+$STEP%"
+elif [[ "$arg" == "LOWER" ]]; then
+    pactl set-sink-volume @DEFAULT_SINK@ "-$STEP%"
+elif [[ "$arg" == "MUTES" ]]; then
+    pactl set-sink-mute @DEFAULT_SINK@ toggle
+elif [[ "$arg" == "MUTEM" ]]; then
+    pactl set-source-mute @DEFAULT_SOURCE@ toggle
+else
+    printf "volume : Unrecognised command %s\n" "$1"
+    printf "volume : usage \'volume [RAISE|LOWER|MUTES|MUTEM]\'\n"
+fi

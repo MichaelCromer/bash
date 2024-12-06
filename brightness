@@ -1,0 +1,18 @@
+#!/bin/sh
+#
+# Change screen brightness using brightnessctl
+#
+# volume [RAISE|LOWER]
+#
+
+STEP=5
+arg="$1"
+
+if [[ "$arg" == "RAISE" ]]; then
+    brightnessctl set "+${STEP}%"
+elif [[ "$arg" == "LOWER" ]]; then
+    brightnessctl set "${STEP}%-"
+else
+    printf "brightness : Unrecognised command %s\n" "$1"
+    printf "brightness : usage \'brightness [RAISE|LOWER]\'\n"
+fi
