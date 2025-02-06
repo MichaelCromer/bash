@@ -4,7 +4,7 @@ DIARY_YEAR=$(date +%Y)
 DIARY_MONTH=$(date +%m)
 DIARY_DAY=$(date +%d)
 
-DIARY_DIR=~/diary/${DIARY_YEAR}/${DIARY_MONTH}
+DIARY_DIR=${HOME}/diary/${DIARY_YEAR}/${DIARY_MONTH}
 DIARY_FILE=${DIARY_DIR}/${DIARY_DAY}.md
 
 
@@ -68,14 +68,15 @@ diary_help()
 {
     cat <<EOF
 ========================================
-  Usage: diary [OPTION|MESSAGE]
+  Usage: diary [OPTION|-- MESSAGE]
 ----------------------------------------
   Manage your daily diary.
   Stored in ~/diary/YYYY/MM/DD.md
 
   Options:
-    -E      Edit today's diary file.
-    --help  Display this help message.
+    -e      Edit today's diary file.
+    -h      Display this help message.
+    --      What follows is recorded.
 ========================================
 EOF
 }
@@ -87,12 +88,13 @@ function diary_main()
     diary_check
 
     [[ $# -eq 0 ]] && diary_print && exit 0
-    [[ "$1" == "--help" ]] && diary_help && exit 0
-    [[ "$1" == "-E" ]] && diary_edit && exit 0
+    [[ "$1" == "-h" ]] && diary_help && exit 0
+    [[ "$1" == "-e" ]] && diary_edit && exit 0
+    [[ "$1" == "--" ]] && shift && diary_update "$*" && exit 0
 
-    diary_update "$*"
+    printf "%s not a recognised diary option\n" "$1"
 
-    exit 0
+    exit 1
 }
 
 diary_main "$@"

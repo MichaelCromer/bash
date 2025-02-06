@@ -1,0 +1,53 @@
+#!/bin/bash
+
+# need to come up with a way to store task list
+#
+#
+
+TIMETABLE_DIR=${HOME}/timetable
+
+
+function timetable_check()
+{
+    [[ ! -d ${TIMETABLE_DIR} ]] && mkdir -p ${TIMETABLE_DIR}
+}
+
+
+function timetable_block()
+{
+    local day=$(date +%u)
+    local hour=$(sed 's/^0//' <<< $(date +%H))
+    local minute=$(sed 's/^0//' <<< $(date +%M))
+    local minutes=$(( 60*$hour + $minute ))
+    local base=$((4 * ($day - 1)))
+    local delta=0
+
+    [[ ${day} -gt 5 || ${hour} -lt 9 || ${hour} -gt 17 ]] && return;
+
+    [[ ${minutes} -lt 540 ]] && delta=1
+    [[ ${minutes} -lt 630 ]] && return;
+    [[ ${minutes} -lt 750 ]] && delta=2
+    [[ ${minutes} -lt 810 ]] && return;
+    [[ ${minutes} -lt 900 ]] && delta=3
+    [[ ${minutes} -lt 990 ]] && return;
+    [[ ${minutes} -lt 1080 ]] && delta=4
+
+    printf "%d\n" $(( $base + $delta ))
+}
+
+
+function alert_start()
+{
+    DISPLAY:=1 DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus notify-send "timetable" "Start work again"
+}
+
+function alert_stop()
+{
+    DISPLAY:=1 DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus notify-send "timetable" "Stop work now"
+}
+
+[[ "$1" == "--start" ]] && $(alert_start) && exit 0;
+[[ "$1" == "--stop" ]] && $(alert_stop) && exit 0;
+[[ "$1" == "--task" ]] && $(timetable_task) && exit 0;
+
+timetable_block
