@@ -144,13 +144,3 @@ function git_prompt() {
     echo -e "\x01$BOLD_WHITE\x02 | $(basename $repo)/\x01$colour\x02$branch$state\x01$RESET\x02"
 }
 
-PS1="\[$BOLD_WHITE\]==> "
-PS1+="\[$BOLD_MAGENTA\]\T"
-PS1+="\[$BOLD_WHITE\] | "
-PS1+="\[$BOLD_GREEN\]\u"
-PS1+='$(git_prompt)'
-PS1+="\[$BOLD_WHITE\] | "
-PS1+="\[$BOLD_BLUE\]\W"
-PS1+="\[$BOLD_WHITE\] | \$ \[$RESET\]"
-
-export PS1
