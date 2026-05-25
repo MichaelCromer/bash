@@ -1,0 +1,13 @@
+#!/usr/bin/sh
+
+[[ $# -eq 0 ]] && echo "Usage : wk <query>" && exit 1
+
+base="https://en.wikipedia.org"
+summary="$base/api/rest_v1/page/summary"
+search="$base/w/rest.php/v1/search/title"
+
+query="$(printf "%s" "$*" | jq -sRr @uri)"
+response="$(curl -s "$summary/$query" | jq -r '.extract_html' )"
+
+printf "\n"
+printf "\n\t%s" "$response" | pandoc -f html -t plain
