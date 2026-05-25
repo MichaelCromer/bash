@@ -1,0 +1,37 @@
+#!/usr/bin/bash
+
+function util_atoi()
+{
+    echo "$1" | sed 's/^\([0-9]*\).*$/\1/'
+}
+
+function util_humantime()
+{
+    local time=$(util_atoi "$1")
+
+    [[ -z "$time" ]] && echo NULL && return 0
+
+    local seconds=$(( $time % 60 ))
+    time=$(( $time / 60 ))
+    local minutes=$(( $time % 60 ))
+    time=$(( $time / 60 ))
+    local hours=$(( $time % 24 ))
+    time=$(( $time / 24 ))
+    local days=$(( $time ))
+    time=$(( $time / 30 ))
+    local months=$(( $time % 30 ))
+    time=$(( $time / 12 ))
+    local years=$(( $time ))
+
+    local string="${years}Y ${months}M ${days}D ${hours}h ${minutes}m ${seconds}s"
+
+    echo "$string" | \
+        sed 's/^\(0[a-zA-Z] \+\)*//' | \
+        sed 's/^\(\([1-9]\+[0-9]*[a-zA-Z] \?\)\{,2\}\).*$/\1/'
+}
+
+[[ $# -ne 0 ]] && util_humantime $1 && exit
+
+if read -r time; then
+    util_humantime $time
+fi
